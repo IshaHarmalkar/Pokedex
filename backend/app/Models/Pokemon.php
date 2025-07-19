@@ -39,7 +39,7 @@ class Pokemon extends Model
 
     public function hasType($type)
     {
-        return in_array($type, $this_>types);
+        return in_array($type, $this->types);
     }
 
     public function getTotalStats()

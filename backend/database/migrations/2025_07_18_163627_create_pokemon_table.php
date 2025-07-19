@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('pokedex_number')->unique()->index();
             $table->json('types');
             $table->json('stats');
-            $table->string('sprile_url')->nullable();
+            $table->string('sprite_url')->nullable();
             $table->text('description')->nullable();
             $table->decimal('height', 5, 2)->nullable();
             $table->decimal('weight', 5, 2)->nullable();
