@@ -18,15 +18,13 @@ return new class extends Migration
             $table->json('types');
             $table->json('stats');
             $table->string('sprite_url')->nullable();
+            $table->string('official_artwork_url')->nullable();
             $table->text('description')->nullable();
-            $table->decimal('height', 5, 2)->nullable();
-            $table->decimal('weight', 5, 2)->nullable();
+            $table->decimal('height', 6, 2)->nullable();
+            $table->decimal('weight', 6, 2)->nullable();
             $table->integer('base_experience')->nullable();
             $table->timestamps();
 
-            //Indexes for comman queries
-            $table->index('name');
-            $table->index('pokedex_number');
         });
     }
 

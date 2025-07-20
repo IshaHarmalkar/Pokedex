@@ -15,7 +15,6 @@ class PokemonSeeder extends Seeder
     {
         $chunkSize = 100;
         $offset = 0;
-        $failedIds = [];
 
         $this->command->info('Seeding Pokemon data from PokeAPi...');
 
@@ -50,55 +49,25 @@ class PokemonSeeder extends Seeder
                 $details = $detailResponse->json();
 
                 // Fetch species data
-                try{
-                     $speciesResponse = Http::get($this->baseUrl."pokemon-species/{$pokemonId}");
+                $speciesResponse = Http::get($this->baseUrl."pokemon-species/{$pokemonId}");
                 $species = $speciesResponse->successful() ? $speciesResponse->json() : null;
-
-                }catch(\Throwable $e){
-                    $species = null;
-                    $this->command->warn("Failed to fetch species data for pokemon ID {$pokemonId}: " . $e->getMessage());
-                     \Log::error("Species fetch failed for ID {$pokemonId}: " . $e->getMessage());
-
-                }
-               
 
                 // process data
                 $pokemon = $this->transformPokemonData($details, $species);
 
                 // Save to db
-                try {
-                    Pokemon::updateOrCreate(['pokedex_number' => $pokemon['pokedex_number']], $pokemon);
+                Pokemon::updateOrCreate(['pokedex_number' => $pokemon['pokedex_number']], $pokemon);
 
-                    $this->command->info("Seeded Pokemon : {$pokemon['name']}");
-
-                } catch (\Throwable $e) {
-                    $failedIds[] = $pokemonId;
-                    $this->command->warn("Failed to seed Pokemon ID {$pokemonId}: " .$e->getMessage());
-                    \Log::error("Seeder failed for ID {$pokemonId}: " . $e->getMessage());
-
-                    continue;
-
-                }
-
-               
+                $this->command->info("Seeded Pokemon : {$pokemon['name']}");
 
             }
 
             $offset += $chunkSize;
             usleep(300000);
 
-
         }
-        
-            if (! empty($failedIds)) {
-                file_put_contents(storage_path('logs/failed_pokemon_ids.json'), json_encode($failedIds, JSON_PRETTY_PRINT));
-                $this->command->warn('Failed IDs saved to logs/failed_pokemon_ids.json');
+        $this->command->info('Seeding complete');
 
-                $this->command->warn('Seeder completed with failures. Skipped IDs: '.implode(', ', $failedIds));
-            } else {
-                $this->command->info('Seeding completed with no errors.');
-
-            }
     }
 
     private function extractIdFromUrl(string $url): int

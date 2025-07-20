@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Pokemon extends Model
 {
@@ -22,14 +22,14 @@ class Pokemon extends Model
         'description',
         'height',
         'weight',
-        'base_experience'
+        'base_experience',
     ];
 
     protected $casts = [
         'types' => 'array',
         'stats' => 'array',
         'height' => 'decimal:2',
-        'weight' => 'decimal:2'
+        'weight' => 'decimal:2',
     ];
 
     public function getStat($statName)
@@ -46,5 +46,4 @@ class Pokemon extends Model
     {
         return array_sum($this->stats);
     }
-
 }
