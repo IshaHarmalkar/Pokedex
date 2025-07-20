@@ -11,7 +11,6 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::get('/pokemon', [PokemonController::class, 'index']);
 
 // the user can pass id or name
-Route::get('/pokemon/{identifier}', [PokemonController::class, 'show']);
 
 Route::get('/pokemon/search', [PokemonController::class, 'search']);
 
@@ -19,3 +18,4 @@ Route::get('/pokemon/random', [PokemonController::class, 'random']);
 
 Route::get('/pokemon/compare', [PokemonController::class, 'compare']);
 
+Route::get('/pokemon/{identifier}', [PokemonController::class, 'show']);
