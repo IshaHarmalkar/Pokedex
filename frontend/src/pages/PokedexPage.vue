@@ -89,7 +89,13 @@ export default {
       }
     },
     goToDetails(pokemon) {
-      this.$router.push(`/pokemon/${pokemon.id}`)
+      const identifier = pokemon.name?.toLowerCase() || pokemon.pokedex_number || pokemon.id
+      this.$router.push({
+        name: 'pokemon-details',
+        params: {
+          identifier: identifier,
+        },
+      })
     },
   },
 }

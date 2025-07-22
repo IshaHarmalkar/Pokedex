@@ -1,77 +1,113 @@
 <template>
-  <q-page class="q-pa-md">
-    <q-card class="q-pa-md rounded-borders" flat bordered>
-      <div v-if="pokemon" class="row q-col-gutter-md">
-        <!-- Reused Card Component -->
-        <div class="col-12 col-md-4">
-          <PokemonCard :pokemon="pokemon" />
-        </div>
+  <q-page class="q-pa-md pokemon-page q-ma-md">
+    <div v-if="loading" class="text-center loading-container">
+      <q-spinner size="60px" color="primary" />
+      <div class="text-h6 q-mt-md text-grey-7">Loading Pokémon...</div>
+    </div>
 
-        <!-- Detailed Info Section -->
-        <div class="col-12 col-md-8">
-          <div class="text-h5 text-primary q-mb-sm">Details</div>
+    <div v-else-if="error" class="text-negative text-center error-container">
+      <q-icon name="error" size="48px" class="q-mb-md" />
+      <div class="text-h6">{{ error }}</div>
+    </div>
 
-          <!-- Description -->
-          <div class="q-mb-md">
-            <div class="text-subtitle1 text-bold">Description</div>
-            <div class="text-body1">{{ pokemon.description }}</div>
-          </div>
-
-          <!-- Stats -->
-          <div class="q-mb-md">
-            <div class="text-subtitle1 text-bold">Stats</div>
-            <q-linear-progress
-              v-for="(value, stat) in pokemon.stats"
-              :key="stat"
-              :value="value / 100"
-              color="accent"
-              track-color="grey-3"
-              class="q-mt-sm"
-            >
-              <div class="text-caption">{{ stat }}: {{ value }}</div>
-            </q-linear-progress>
-          </div>
-
-          <!-- Physical Attributes -->
-          <div class="row q-gutter-md">
-            <div>
-              <q-icon name="height" class="q-mr-xs" />
-              <span><strong>Height:</strong> {{ pokemon.height }} m</span>
-            </div>
-            <div>
-              <q-icon name="fitness_center" class="q-mr-xs" />
-              <span><strong>Weight:</strong> {{ pokemon.weight }} kg</span>
-            </div>
+    <div v-else class="pokemon-container">
+      <!-- Main Pokemon Card -->
+      <q-card class="pokemon-card q-mb-lg" elevated>
+        <!-- Hero Image Section -->
+        <div class="image-section">
+          <q-img
+            :src="pokemon.official_artwork_url ?? pokemon.sprite_url"
+            :alt="pokemon.name ?? 'Unknown'"
+            spinner-color="grey-5"
+            class="pokemon-image"
+            fit="contain"
+            loading="lazy"
+          />
+          <div class="type-badges">
+            <q-chip
+              v-for="type in pokemon.types"
+              :key="type"
+              :class="`type-${type}`"
+              class="type-chip"
+              text-color="white"
+              :label="type"
+            />
           </div>
         </div>
+
+        <!-- Main Info Section -->
+        <q-card-section class="main-info">
+          <div class="pokemon-header">
+            <h1 class="pokemon-name">{{ pokemon.name }}</h1>
+            <div class="pokedex-number">
+              #{{ pokemon.pokedex_number.toString().padStart(3, '0') }}
+            </div>
+          </div>
+
+          <p class="pokemon-description">{{ pokemon.description }}</p>
+        </q-card-section>
+      </q-card>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <!-- Physical Stats -->
+        <q-card class="stat-card" flat bordered>
+          <q-card-section class="text-center">
+            <q-icon name="straighten" size="32px" class="stat-icon" color="blue-5" />
+            <div class="stat-value">{{ pokemon.height }}m</div>
+            <div class="stat-label">Height</div>
+          </q-card-section>
+        </q-card>
+
+        <q-card class="stat-card" flat bordered>
+          <q-card-section class="text-center">
+            <q-icon name="fitness_center" size="32px" class="stat-icon" color="orange-5" />
+            <div class="stat-value">{{ pokemon.weight }}kg</div>
+            <div class="stat-label">Weight</div>
+          </q-card-section>
+        </q-card>
+
+        <q-card class="stat-card" flat bordered>
+          <q-card-section class="text-center">
+            <q-icon name="star" size="32px" class="stat-icon" color="yellow-6" />
+            <div class="stat-value">{{ pokemon.base_experience }}</div>
+            <div class="stat-label">Base XP</div>
+          </q-card-section>
+        </q-card>
       </div>
 
-      <div v-else-if="loading" class="text-center q-mt-md">
-        <q-spinner color="primary" size="40px" />
-      </div>
+      <!-- Battle Stats -->
+      <q-card class="battle-stats-card q-mt-lg q-ml-sm q-mr-sm" flat bordered>
+        <q-card-section>
+          <div class="section-title">
+            <q-icon name="sports_mma" size="24px" class="q-mr-sm" color="red-5" />
+            Battle Stats
+          </div>
 
-      <div v-else-if="error" class="text-negative text-center q-mt-md">
-        {{ error }}
-      </div>
-    </q-card>
+          <div class="stats-list">
+            <div v-for="(value, stat) in pokemon.stats" :key="stat" class="stat-row">
+              <div class="stat-name">{{ formatStatName(stat) }}</div>
+              <div class="stat-bar-container">
+                <q-linear-progress
+                  :value="value / 255"
+                  :color="getStatColor(value)"
+                  class="stat-bar"
+                  size="12px"
+                  rounded
+                />
+                <div class="stat-value-badge">{{ value }}</div>
+              </div>
+            </div>
+          </div>
+        </q-card-section>
+      </q-card>
+    </div>
   </q-page>
 </template>
 
 <script>
-import PokemonCard from 'src/components/PokemonCard.vue'
-
 export default {
-  name: 'PokemonDetails',
-  components: {
-    PokemonCard,
-  },
-  props: {
-    identifier: {
-      type: String,
-      required: true,
-    },
-  },
-
+  name: 'PokemonDetailsPage',
   data() {
     return {
       pokemon: null,
@@ -79,24 +115,380 @@ export default {
       error: null,
     }
   },
-
   async mounted() {
+    const identifier = this.$route.params.identifier
+
     try {
-      console.log(this.identifier)
-      const res = await this.$api.get(`/pokemon/${this.identifier}`)
+      const res = await this.$api.get(`/pokemon/${identifier}`)
       this.pokemon = res.data
+      console.log(res)
     } catch (err) {
-      this.error = 'Failed to load Pokémon'
+      this.error = 'Could not load Pokémon details.'
       console.error(err)
     } finally {
       this.loading = false
     }
   },
+  methods: {
+    formatStatName(stat) {
+      return stat.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())
+    },
+    getStatColor(value) {
+      if (value >= 100) return 'green'
+      if (value >= 70) return 'light-green'
+      if (value >= 50) return 'orange'
+      return 'red'
+    },
+  },
 }
 </script>
 
 <style scoped>
-.rounded-borders {
-  border-radius: 16px;
+.pokemon-page {
+  max-width: 900px;
+  /* margin: 0 auto; */
+  margin: 3rem auto 1rem auto; /* top, horizontal, bottom */
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.loading-container,
+.error-container {
+  padding: 4rem 1rem;
+  margin: 2rem 0;
+}
+
+.pokemon-card {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  background: white;
+  margin: 0 0.5rem 1.5rem 0.5rem;
+}
+
+.image-section {
+  position: relative;
+  background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+  text-align: center;
+}
+
+.pokemon-image {
+  height: 200px;
+  max-width: 300px;
+  margin: 0 auto;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.type-badges {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.type-chip {
+  font-weight: 600;
+  text-transform: capitalize;
+  border-radius: 20px;
+}
+
+/* Type-specific colors */
+.type-bug {
+  background-color: #a8b820 !important;
+}
+.type-fire {
+  background-color: #f08030 !important;
+}
+.type-water {
+  background-color: #6890f0 !important;
+}
+.type-grass {
+  background-color: #78c850 !important;
+}
+.type-electric {
+  background-color: #f8d030 !important;
+}
+.type-psychic {
+  background-color: #f85888 !important;
+}
+.type-normal {
+  background-color: #a8a878 !important;
+}
+.type-fighting {
+  background-color: #c03028 !important;
+}
+.type-poison {
+  background-color: #a040a0 !important;
+}
+.type-ground {
+  background-color: #e0c068 !important;
+}
+.type-flying {
+  background-color: #a890f0 !important;
+}
+.type-rock {
+  background-color: #b8a038 !important;
+}
+.type-ghost {
+  background-color: #705898 !important;
+}
+.type-dragon {
+  background-color: #7038f8 !important;
+}
+.type-dark {
+  background-color: #705848 !important;
+}
+.type-steel {
+  background-color: #b8b8d0 !important;
+}
+.type-fairy {
+  background-color: #ee99ac !important;
+}
+.type-ice {
+  background-color: #98d8d8 !important;
+}
+
+.main-info {
+  padding: 2rem;
+}
+
+.pokemon-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.pokemon-name {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  text-transform: capitalize;
+  color: #2c3e50;
+}
+
+.pokedex-number {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #7f8c8d;
+  background: #ecf0f1;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+}
+
+.pokemon-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #5a6c7d;
+  margin: 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 0 0.5rem;
+}
+
+.stat-card {
+  border-radius: 15px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  background: white;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
+.battle-stats-card {
+  border-radius: 15px;
+  background: white;
+  /* margin: 0 0.5rem; */
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stat-name {
+  min-width: 120px;
+  font-weight: 500;
+  color: #5a6c7d;
+  text-transform: capitalize;
+}
+
+.stat-bar-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.stat-bar {
+  flex: 1;
+  border-radius: 6px;
+}
+
+.stat-value-badge {
+  background: #ecf0f1;
+  color: #2c3e50;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-width: 35px;
+  text-align: center;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .pokemon-page {
+    padding: 0.5rem;
+  }
+
+  .pokemon-card {
+    margin: 0 0 1.5rem 0;
+  }
+
+  .stats-grid,
+  .battle-stats-card {
+    margin: 0;
+  }
+
+  .image-section {
+    padding: 1.5rem;
+  }
+
+  .pokemon-image {
+    height: 160px;
+  }
+
+  .main-info {
+    padding: 1.5rem;
+  }
+
+  .pokemon-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .pokemon-name {
+    font-size: 2rem;
+  }
+
+  .pokedex-number {
+    font-size: 1.2rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+
+  .stat-value {
+    font-size: 1.2rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pokemon-page {
+    padding: 0.25rem;
+  }
+
+  .type-badges {
+    position: static;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .pokemon-name {
+    font-size: 1.8rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .stat-row {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .stat-name {
+    min-width: auto;
+    font-size: 0.9rem;
+  }
+
+  .stat-bar-container {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .stat-bar {
+    width: 100%;
+  }
+}
+
+/* Tablet responsiveness */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .pokemon-page {
+    padding: 1.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 </style>

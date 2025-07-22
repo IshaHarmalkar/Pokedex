@@ -5,7 +5,12 @@ const routes = [
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
       { path: 'pokemon', component: () => import('pages/PokedexPage.vue') },
-      { path: 'pokemon/:identifier', component: () => import('pages/PokemonDetails.vue') },
+
+      {
+        path: '/pokemon/:identifier',
+        name: 'pokemon-details',
+        component: () => import('pages/PokemonDetails.vue'),
+      },
     ],
   },
 
