@@ -9,8 +9,9 @@ class PokemonController extends Controller
 {
     public function index(Request $request)
     {
+
         $perPage = $request->input('per_page', 20);
-        $pokemons = Pokemon::paginate($perPage);
+        $pokemons = Pokemon::select(['id', 'name', 'sprite_url', 'official_artwork_url', 'types', 'pokedex_number'])->paginate($perPage);
 
         return response()->json($pokemons);
     }
