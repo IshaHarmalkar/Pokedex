@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     async fetchPokemons(url = 'pokemon') {
-      // this.loading = true
+      this.loading = true
       this.error = null
 
       try {
@@ -104,6 +104,8 @@ export default {
         perPage: data.per_page,
         lastPage: data.last_page,
       }
+
+      this.preloadImagesForCurrentPage()
     },
 
     async prefetchNextPage(url) {
@@ -115,6 +117,12 @@ export default {
       try {
         const res = await this.$api.get(url)
         this.cachedNextPage = res.data
+
+        // Preload images for next page
+        for (const pokemon of res.data.data || []) {
+          const img = new Image()
+          img.src = pokemon.official_artwork_url || pokemon.sprite_url
+        }
       } catch {
         this.cachedNextPage = null
       }
@@ -127,6 +135,13 @@ export default {
         this.cachedNextPage = null
       } else {
         await this.fetchPokemons(url)
+      }
+    },
+
+    preloadImagesForCurrentPage() {
+      for (const pokemon of this.pokemons) {
+        const img = new Image()
+        img.src = pokemon.official_artwork_url || pokemon.sprite_url
       }
     },
 
