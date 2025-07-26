@@ -4,7 +4,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
-      { path: 'pokemon', component: () => import('pages/PokedexPage.vue') },
+      { path: 'pokemon', name: 'pokedex', component: () => import('pages/PokedexPage.vue') },
 
       {
         path: '/pokemon/:identifier',

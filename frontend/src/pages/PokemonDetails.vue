@@ -1,5 +1,8 @@
 <template>
   <q-page class="q-pa-md pokemon-page q-ma-md">
+    <div>
+      <q-btn label="Back" color="primary" rounded-borders class="q-ma-sm" @click="handleBack" />
+    </div>
     <div v-if="loading" class="text-center loading-container">
       <q-spinner size="60px" color="primary" />
       <div class="text-h6 q-mt-md text-grey-7">Loading Pokémon...</div>
@@ -106,7 +109,13 @@
 </template>
 
 <script>
+import { useNavigationStore } from 'src/stores/navigation-store'
+
 export default {
+  setup() {
+    const navigateStore = useNavigationStore()
+    return { navigateStore }
+  },
   name: 'PokemonDetailsPage',
   data() {
     return {
@@ -138,6 +147,15 @@ export default {
       if (value >= 70) return 'light-green'
       if (value >= 50) return 'orange'
       return 'red'
+    },
+
+    handleBack() {
+      if (this.navigateStore.mode === 'search') {
+        this.$router.push({ name: 'pokedex', query: { q: this.navigateStore.searchQuery } })
+      } else {
+        const page = this.navigateStore.PageNo || 1
+        this.$router.push({ name: 'pokedex', query: { page } })
+      }
     },
   },
 }

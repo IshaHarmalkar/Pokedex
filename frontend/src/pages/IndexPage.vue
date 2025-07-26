@@ -1,5 +1,8 @@
 <template>
   <q-page class="flex flex-center">
+    <router-link to="/pokemon">
+      <q-btn label="Home" />
+    </router-link>
     <q-btn label="Test API" @click="testApi" :loading="loading" />
     <div v-if="testData">
       <pre>{{ testData }}</pre>
