@@ -69,6 +69,23 @@ export default defineConfig((/* ctx */) => {
           { server: false },
         ],
       ],
+      html: {
+        link: [
+          {
+            rel: 'preconnect',
+            href: 'https://fonts.googleapis.com',
+          },
+          {
+            rel: 'preconnect',
+            href: 'https://fonts.gstatic.com',
+            crossorigin: '',
+          },
+          {
+            rel: 'stylesheet',
+            href: 'https://fonts.googleapis.com/css2?family=Goldman:wght@400;700&display=swap',
+          },
+        ],
+      },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#devserver

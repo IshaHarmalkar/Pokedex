@@ -1,19 +1,19 @@
 <template>
-  <div class="q-mb-md">
+  <div class="q-mx-md search-bar-container">
     <q-input
       v-model="searchQuery"
       filled
       debounce="300"
-      placeholder="Search by name or id"
+      placeholder="Name or Number"
       @keyup.enter="onSearch"
       @clear="onClear"
       clearable
       dense
-      rounded
       outlined
+      class="search-bar"
     >
       <template v-slot:append>
-        <q-icon name="search" @click="onSearch" class="cursor-pointed" />
+        <q-icon name="search" @click="onSearch" class="cursor-pointed icon" />
       </template>
     </q-input>
   </div>
@@ -46,4 +46,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.search-bar {
+  background-color: #f6fafb;
+}
+
+.icon {
+}
+</style>

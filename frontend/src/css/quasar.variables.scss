@@ -14,6 +14,7 @@
 
 // src/css/quasar.variables.scss
 $primary: #ff1c1c; // Pokémon red
+
 $secondary: #3b4cca; // Pokémon blue
 $accent: #ffcb05; // Pikachu yellow
 $dark: #2e2e2e;
@@ -24,3 +25,57 @@ $positive: #21ba45;
 $negative: #c10015;
 $info: #31ccec;
 $warning: #f2c037;
+
+// Pokémon Type Colors
+$type-normal: #a8a77a;
+$type-fire: #ee8130;
+$type-water: #6390f0;
+$type-electric: #f7d02c;
+$type-grass: #7ac74c;
+$type-ice: #96d9d6;
+$type-fighting: #c22e28;
+$type-poison: #a33ea1;
+$type-ground: #e2bf65;
+$type-flying: #a98ff3;
+$type-psychic: #f95587;
+$type-bug: #a6b91a;
+$type-rock: #b6a136;
+$type-ghost: #735797;
+$type-dragon: #6f35fc;
+$type-dark: #705746;
+$type-steel: #b7b7ce;
+$type-fairy: #d685ad;
+
+// 🔥 Reusable border classes for cards and chips
+@each $type,
+  $color
+    in (
+      normal: $type-normal,
+      fire: $type-fire,
+      water: $type-water,
+      electric: $type-electric,
+      grass: $type-grass,
+      ice: $type-ice,
+      fighting: $type-fighting,
+      poison: $type-poison,
+      ground: $type-ground,
+      flying: $type-flying,
+      psychic: $type-psychic,
+      bug: $type-bug,
+      rock: $type-rock,
+      ghost: $type-ghost,
+      dragon: $type-dragon,
+      dark: $type-dark,
+      steel: $type-steel,
+      fairy: $type-fairy
+    )
+{
+  .border-#{$type} {
+    border: 3px solid #{$color};
+    border-radius: 8px;
+  }
+
+  .chip-border-#{$type} {
+    border: 2px solid #{$color};
+  }
+}

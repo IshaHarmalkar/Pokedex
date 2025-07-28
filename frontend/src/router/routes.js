@@ -5,6 +5,8 @@ const routes = [
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
       { path: 'pokemon', name: 'pokedex', component: () => import('pages/PokedexPage.vue') },
+      { path: 'compare', name: 'compare', component: () => import('pages/ComparePage.vue') },
+      { path: 'random', name: 'random', component: () => import('pages/RandomPage.vue') },
 
       {
         path: '/pokemon/:identifier',
