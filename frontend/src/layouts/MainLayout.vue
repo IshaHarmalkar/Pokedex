@@ -39,6 +39,15 @@
             class="nav-btn"
             :size="$q.screen.lt.md ? 'sm' : 'md'"
           />
+
+          <q-btn
+            flat
+            :to="{ name: 'test' }"
+            icon="yard"
+            :label="$q.screen.gt.sm ? 'Test' : ''"
+            class="nav-btn"
+            :size="$q.screen.lt.md ? 'sm' : 'md'"
+          />
         </q-btn-group>
 
         <!-- Mobile Navigation - icons only -->
@@ -67,6 +76,8 @@
             size="sm"
             class="mobile-nav-btn"
           />
+
+          <q-btn flat :to="{ name: 'test' }" icon="yard" size="sm" class="mobile-nav-btn" />
         </div>
       </q-toolbar>
     </q-header>

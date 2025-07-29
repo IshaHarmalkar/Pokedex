@@ -7,6 +7,7 @@ const routes = [
       { path: 'pokemon', name: 'pokedex', component: () => import('pages/PokedexPage.vue') },
       { path: 'compare', name: 'compare', component: () => import('pages/ComparePage.vue') },
       { path: 'random', name: 'random', component: () => import('pages/RandomPage.vue') },
+      { path: 'test', name: 'test', component: () => import('pages/TestPage.vue') },
 
       {
         path: '/pokemon/:identifier',
