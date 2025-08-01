@@ -19,3 +19,5 @@ Route::get('/pokemon/random', [PokemonController::class, 'random']);
 Route::get('/pokemon/compare', [PokemonController::class, 'compare']);
 
 Route::get('/pokemon/{identifier}', [PokemonController::class, 'show']);
+
+Route::get('/pokemon/type/{type}', [PokemonController::class, 'byType']);

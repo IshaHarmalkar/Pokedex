@@ -11,6 +11,7 @@ class PokemonController extends Controller
     {
 
         $perPage = $request->input('per_page', 20);
+
         $pokemons = Pokemon::select(['id', 'name', 'sprite_url', 'official_artwork_url', 'types', 'pokedex_number'])->paginate($perPage);
 
         return response()->json($pokemons);
@@ -91,6 +92,26 @@ class PokemonController extends Controller
         return response()->json([
             'first' => $pokemons->first(),
             'second' => $pokemons->last(),
+        ]);
+    }
+
+    public function byType(string $type, Request $request)
+    {
+        $limit = $request->input('limit', 20);
+        $lastId = $request->input('last_id', 0);
+
+        $pokemons = Pokemon::whereJsonContains('types', strtolower($type))
+            ->where('id', '>', $lastId)
+            ->orderBy('id')
+            ->select(['id', 'name', 'sprite_url', 'official_artwork_url', 'types', 'pokedex_number'])
+            ->limit($limit)
+            ->get();
+
+        return response()->json([
+
+            'data' => $pokemons,
+            'next_last_id' => $pokemons->last()?->id,
+            'has_more' => $pokemons->count() === (int) $limit,
         ]);
     }
 }
