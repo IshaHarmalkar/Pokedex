@@ -1,5 +1,5 @@
 <template>
-  <q-page class="pokemon-page">
+  <q-page class="pokemon-page" :style="pageBackgroundStyle">
     <div class="container q-pa-md">
       <div class="text-center q-mb-lg">
         <!-- <h1 class="text-h3 text-weight-bold q-mb-md text-secondary">Random Pokémon Generator</h1> -->
@@ -8,88 +8,14 @@
           :loading="loading"
           size="lg"
           class="generate-btn q-mt-md"
-          icon="casino"
-          label="Generate Random Pokémon"
+          icon="catching_pokemon"
+          icon-color="red"
+          label="Random Pokémon"
         />
       </div>
 
       <div v-if="pokemon && !loading" class="pokemon-card-container">
-        <q-card class="pokemon-card" :style="cardStyle">
-          <!-- Header with Pokemon name and number -->
-          <q-card-section class="pokemon-header text-center">
-            <div class="pokemon-number">#{{ String(pokemon.pokedex_number).padStart(3, '0') }}</div>
-            <h2 class="pokemon-name">{{ capitalize(pokemon.name) }}</h2>
-
-            <!-- Types -->
-            <div class="pokemon-types q-mt-sm">
-              <q-chip
-                v-for="type in pokemon.types"
-                :key="type"
-                :style="getTypeStyle(type)"
-                class="type-chip text-weight-bold"
-                text-color="white"
-              >
-                {{ capitalize(type) }}
-              </q-chip>
-            </div>
-          </q-card-section>
-
-          <!-- Pokemon Image -->
-          <q-card-section class="pokemon-image-section text-center">
-            <img
-              :src="pokemon.official_artwork_url"
-              :alt="pokemon.name"
-              class="pokemon-image"
-              @error="useSprite"
-            />
-          </q-card-section>
-
-          <!-- Pokemon Info -->
-          <q-card-section class="pokemon-info">
-            <p class="pokemon-description text-center q-mb-lg">
-              {{ pokemon.description }}
-            </p>
-
-            <!-- Basic Info Grid -->
-            <div class="info-grid q-mb-lg">
-              <div class="info-item">
-                <q-icon name="straighten" size="sm" class="q-mr-xs" />
-                <span class="info-label">Height:</span>
-                <span class="info-value">{{ pokemon.height }}m</span>
-              </div>
-              <div class="info-item">
-                <q-icon name="fitness_center" size="sm" class="q-mr-xs" />
-                <span class="info-label">Weight:</span>
-                <span class="info-value">{{ pokemon.weight }}kg</span>
-              </div>
-              <div class="info-item">
-                <q-icon name="stars" size="sm" class="q-mr-xs" />
-                <span class="info-label">Base XP:</span>
-                <span class="info-value">{{ pokemon.base_experience }}</span>
-              </div>
-            </div>
-
-            <!-- Stats -->
-            <div class="stats-section">
-              <h3 class="stats-title text-center q-mb-md">Base Stats</h3>
-              <div class="stats-grid">
-                <div v-for="(value, stat) in pokemon.stats" :key="stat" class="stat-item">
-                  <div class="stat-name">{{ formatStatName(stat) }}</div>
-                  <div class="stat-bar-container">
-                    <div
-                      class="stat-bar"
-                      :style="{
-                        width: `${(value / 255) * 100}%`,
-                        backgroundColor: getStatColor(value),
-                      }"
-                    ></div>
-                  </div>
-                  <div class="stat-value">{{ value }}</div>
-                </div>
-              </div>
-            </div>
-          </q-card-section>
-        </q-card>
+        <test-card :pokemon="pokemon" />
       </div>
 
       <!-- Loading State -->
@@ -113,14 +39,19 @@
 </template>
 
 <script>
+import TestCard from 'src/components/TestCard.vue'
 export default {
   name: 'PokemonRandomPage',
+  components: {
+    TestCard,
+  },
 
   data() {
     return {
       pokemon: null,
       loading: false,
       error: null,
+      defaultBackground: 'linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%)',
 
       // Pokemon type colors (official colors)
       typeColors: {
@@ -147,23 +78,21 @@ export default {
   },
 
   computed: {
-    cardStyle() {
-      if (!this.pokemon?.types?.length) return {}
+    pageBackgroundStyle() {
+      if (!this.pokemon?.types?.length) {
+        return { background: this.defaultBackground }
+      }
 
       const primaryType = this.pokemon.types[0]
       const secondaryType = this.pokemon.types[1]
 
       if (secondaryType) {
         return {
-          background: `linear-gradient(135deg, ${this.typeColors[primaryType]}15 0%, ${this.typeColors[secondaryType]}15 100%)`,
-          border: `3px solid ${this.typeColors[primaryType]}`,
-          boxShadow: `0 8px 32px ${this.typeColors[primaryType]}30`,
+          background: `linear-gradient(135deg, ${this.typeColors[primaryType]}22 0%, ${this.typeColors[secondaryType]}22 100%)`,
         }
       } else {
         return {
-          background: `linear-gradient(135deg, ${this.typeColors[primaryType]}15 0%, ${this.typeColors[primaryType]}25 100%)`,
-          border: `3px solid ${this.typeColors[primaryType]}`,
-          boxShadow: `0 8px 32px ${this.typeColors[primaryType]}30`,
+          background: `linear-gradient(135deg, ${this.typeColors[primaryType]}22 0%, ${this.typeColors[primaryType]}33 100%)`,
         }
       }
     },
@@ -232,7 +161,7 @@ export default {
 <style lang="scss" scoped>
 .pokemon-page {
   min-height: 100vh;
-  background: #f5f5f5;
+  transition: background 0.6s ease;
   color: #333;
 }
 
@@ -245,13 +174,16 @@ export default {
 .generate-btn {
   font-size: 1rem;
   padding: 10px 24px;
-  border: #3f51b5 2px solid;
+
   box-shadow: none;
   text-transform: none;
-  color: $secondary;
+  // fallback or keep your $secondary if it works
+
+  background: linear-gradient(to bottom, red 50%, white 50%);
 
   &:hover {
     background-color: #303f9f;
+    color: white; // optional, depending on hover contrast
   }
 }
 

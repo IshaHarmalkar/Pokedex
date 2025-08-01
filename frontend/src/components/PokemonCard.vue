@@ -18,8 +18,9 @@
 
       <q-card-section class="text-center">
         <div class="text-h6 capitalize">
-          {{ pokemon.name }}
+          {{ capitalize(pokemon.name) }}
         </div>
+
         <div class="row justify-center q-gutter-xs">
           <q-chip
             v-for="type in pokemon.types"
@@ -89,6 +90,12 @@ export default {
       }
 
       return {} // fallback
+    },
+  },
+  methods: {
+    capitalize(str) {
+      if (!str) return ''
+      return str.charAt(0).toUpperCase() + str.slice(1)
     },
   },
 }

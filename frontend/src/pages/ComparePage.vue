@@ -13,23 +13,23 @@
 
       <div v-if="loading" class="text-center">
         <q-spinner size="50px" color="primary" />
-        <div class="q-mt-sm text-subtitle2">Loading COmaprison...</div>
+        <div class="q-mt-sm text-subtitle2">Loading Comaprison...</div>
       </div>
 
-      <div v-else-if="error" class="text-negative text-center">
-        <q-icon name="error_outline" size="48px" />
+      <div v-else-if="error" class="text-secondary text-center">
+        <q-icon class="text-primary" name="catching_pokemon" size="48px" />
         <div class="text-subtitle1">{{ error }}</div>
       </div>
 
       <div v-else class="row q-col-gutter-md">
         <div class="col-12 col-md-6">
           <!-- Pokemon 1 -->
-          <PokemonCompareCard :pokemon="comparison.first" />
+          <TestCard :pokemon="comparison.first" />
         </div>
 
         <div class="col-12 col-md-6">
           <!-- Pokemon 2 -->
-          <PokemonCompareCard :pokemon="comparison.second" />
+          <TestCard :pokemon="comparison.second" />
         </div>
       </div>
     </div>
@@ -37,13 +37,13 @@
 </template>
 
 <script>
-import PokemonCompareCard from 'src/components/PokemonCompareCard.vue'
 import PokemonCompareInput from 'src/components/PokemonCompareInput.vue'
+import TestCard from 'src/components/TestCard.vue'
 
 export default {
   name: 'ComparePage',
   components: {
-    PokemonCompareCard,
+    TestCard,
     PokemonCompareInput,
   },
 
@@ -104,7 +104,7 @@ export default {
     const { first, second } = this.$route.query
 
     if (!first || !second) {
-      this.error = 'Missing Pokemon to compare.'
+      this.error = 'Add The Poekmons to be Compared.'
       this.loading = false
       return
     }

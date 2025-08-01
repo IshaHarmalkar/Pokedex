@@ -7,12 +7,23 @@ const routes = [
       { path: 'pokemon', name: 'pokedex', component: () => import('pages/PokedexPage.vue') },
       { path: 'compare', name: 'compare', component: () => import('pages/ComparePage.vue') },
       { path: 'random', name: 'random', component: () => import('pages/RandomPage.vue') },
-      { path: 'test', name: 'test', component: () => import('pages/TestPage.vue') },
+      { path: 'test', name: 'test', component: () => import('pages/TypesPage.vue') },
 
       {
         path: '/pokemon/:identifier',
         name: 'pokemon-details',
         component: () => import('pages/PokemonDetails.vue'),
+      },
+
+      {
+        path: '/types',
+        name: 'TypesPage',
+        component: () => import('pages/TypesPage.vue'),
+      },
+      {
+        path: '/types/:type',
+        name: 'TypePage',
+        component: () => import('pages/PokemonTypePage.vue'),
       },
     ],
   },

@@ -15,101 +15,15 @@
 
     <div v-else class="pokemon-container">
       <!-- Main Pokemon Card -->
-      <q-card class="pokemon-card q-mb-lg" elevated>
-        <!-- Hero Image Section -->
-        <div class="image-section">
-          <q-img
-            :src="pokemon.official_artwork_url ?? pokemon.sprite_url"
-            :alt="pokemon.name ?? 'Unknown'"
-            spinner-color="grey-5"
-            class="pokemon-image"
-            fit="contain"
-            loading="lazy"
-          />
-          <div class="type-badges">
-            <q-chip
-              v-for="type in pokemon.types"
-              :key="type"
-              :class="`type-${type}`"
-              class="type-chip"
-              text-color="white"
-              :label="type"
-            />
-          </div>
-        </div>
 
-        <!-- Main Info Section -->
-        <q-card-section class="main-info">
-          <div class="pokemon-header">
-            <h1 class="pokemon-name">{{ pokemon.name }}</h1>
-            <div class="pokedex-number">
-              #{{ pokemon.pokedex_number.toString().padStart(3, '0') }}
-            </div>
-          </div>
-
-          <p class="pokemon-description">{{ pokemon.description }}</p>
-        </q-card-section>
-      </q-card>
-
-      <!-- Stats Grid -->
-      <div class="stats-grid">
-        <!-- Physical Stats -->
-        <q-card class="stat-card" flat bordered>
-          <q-card-section class="text-center">
-            <q-icon name="straighten" size="32px" class="stat-icon" color="blue-5" />
-            <div class="stat-value">{{ pokemon.height }}m</div>
-            <div class="stat-label">Height</div>
-          </q-card-section>
-        </q-card>
-
-        <q-card class="stat-card" flat bordered>
-          <q-card-section class="text-center">
-            <q-icon name="fitness_center" size="32px" class="stat-icon" color="orange-5" />
-            <div class="stat-value">{{ pokemon.weight }}kg</div>
-            <div class="stat-label">Weight</div>
-          </q-card-section>
-        </q-card>
-
-        <q-card class="stat-card" flat bordered>
-          <q-card-section class="text-center">
-            <q-icon name="star" size="32px" class="stat-icon" color="yellow-6" />
-            <div class="stat-value">{{ pokemon.base_experience }}</div>
-            <div class="stat-label">Base XP</div>
-          </q-card-section>
-        </q-card>
-      </div>
-
-      <!-- Battle Stats -->
-      <q-card class="battle-stats-card q-mt-lg q-ml-sm q-mr-sm" flat bordered>
-        <q-card-section>
-          <div class="section-title">
-            <q-icon name="sports_mma" size="24px" class="q-mr-sm" color="red-5" />
-            Battle Stats
-          </div>
-
-          <div class="stats-list">
-            <div v-for="(value, stat) in pokemon.stats" :key="stat" class="stat-row">
-              <div class="stat-name">{{ formatStatName(stat) }}</div>
-              <div class="stat-bar-container">
-                <q-linear-progress
-                  :value="value / 255"
-                  :color="getStatColor(value)"
-                  class="stat-bar"
-                  size="12px"
-                  rounded
-                />
-                <div class="stat-value-badge">{{ value }}</div>
-              </div>
-            </div>
-          </div>
-        </q-card-section>
-      </q-card>
+      <test-card :pokemon="pokemon" />
     </div>
   </q-page>
 </template>
 
 <script>
 import { useNavigationStore } from 'src/stores/navigation-store'
+import TestCard from 'components/TestCard.vue'
 
 export default {
   setup() {
@@ -117,6 +31,11 @@ export default {
     return { navigateStore }
   },
   name: 'PokemonDetailsPage',
+
+  components: {
+    TestCard,
+  },
+
   data() {
     return {
       pokemon: null,
