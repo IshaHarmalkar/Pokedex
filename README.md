@@ -23,8 +23,11 @@ A full-stack Pokédex web app built with **Laravel**, **Vue.js**, and **Quasar**
   - Pokémon search
   - Type filtering
   - Evolution chain
+  - Compare Pokemon
+  - Randome Pokemon
+  - Evolutio
 
-- Queued jobs for efficient data fetching and processing
+
 
 ---
 
@@ -35,7 +38,7 @@ A full-stack Pokédex web app built with **Laravel**, **Vue.js**, and **Quasar**
 - Vue Router for dynamic page routing
 - Axios for API communication
 - Custom reusable components (Pokémon Card, Compare, Type Filter, etc.)
-- Horizontal slider for evolution chains
+- Expandable for evolution chains
 - Search, compare, and filter Pokémon by type, name, etc.
 
 ---
@@ -45,7 +48,7 @@ A full-stack Pokédex web app built with **Laravel**, **Vue.js**, and **Quasar**
 - **Minimal & clean UI** with soft gradients and shadows for better UX.
 - **Separation of concerns:** Laravel handles all API/data processing, Vue handles presentation.
 - **Reusable components** for scalability.
-- **Efficient loading** using batch seeding and endpoint caching strategies.
+- **Efficient loading** using prefectching, lazy loading, browser caching for remoted resources.
 - Responsive and mobile-friendly by default using Quasar utilities.
 
 ---
@@ -80,6 +83,8 @@ A full-stack Pokédex web app built with **Laravel**, **Vue.js**, and **Quasar**
 ### Pokémon Without Evolution
 
 ![No Evolution](ScreenShots/Pokemon_No_Evolution.png)
+
+Some Pokemons have no evolution details, so the evolution button uses dynamic rendering.
 
 ---
 
@@ -144,4 +149,3 @@ A full-stack Pokédex web app built with **Laravel**, **Vue.js**, and **Quasar**
 
 ---
 
-Let me know if you’d like a `README.md` file generated or want a shorter version!
