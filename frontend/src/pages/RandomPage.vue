@@ -177,7 +177,8 @@ export default {
 
   box-shadow: none;
   text-transform: none;
-  // fallback or keep your $secondary if it works
+  //border: grey 2px solid;
+  // fallback or keep  $secondary if it works
 
   background: linear-gradient(to bottom, red 50%, white 50%);
 

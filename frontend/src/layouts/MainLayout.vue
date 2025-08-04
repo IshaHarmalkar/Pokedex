@@ -3,12 +3,18 @@
     <q-header class="q-ma-sm q-ma-md-md q-ma-lg-lg">
       <q-toolbar class="rounded-borders q-mb-md">
         <q-toolbar-title class="goldman-bold flex items-center">
-          <q-icon
-            name="catching_pokemon"
-            :size="$q.screen.lt.sm ? 'sm' : $q.screen.lt.md ? 'md' : 'lg'"
-            class="q-mr-sm"
-          />
-          <span v-if="$q.screen.gt.xs">Pokedex</span>
+          <router-link
+            :to="{ name: 'pokedex' }"
+            class="row items-center no-wrap text-primary"
+            style="text-decoration: none"
+          >
+            <q-icon
+              name="catching_pokemon"
+              :size="$q.screen.lt.sm ? 'sm' : $q.screen.lt.md ? 'md' : 'lg'"
+              class="q-mr-sm"
+            />
+            <span v-if="$q.screen.gt.xs">Pokedex</span>
+          </router-link>
         </q-toolbar-title>
 
         <q-space />
@@ -39,15 +45,23 @@
             class="nav-btn"
             :size="$q.screen.lt.md ? 'sm' : 'md'"
           />
-
           <q-btn
+            flat
+            :to="{ name: 'TypesPage' }"
+            icon="category"
+            :label="$q.screen.gt.sm ? 'Types' : ''"
+            class="nav-btn"
+            :size="$q.screen.lt.md ? 'sm' : 'md'"
+          />
+
+          <!-- <q-btn
             flat
             :to="{ name: 'test' }"
             icon="yard"
             :label="$q.screen.gt.sm ? 'Test' : ''"
             class="nav-btn"
             :size="$q.screen.lt.md ? 'sm' : 'md'"
-          />
+          /> -->
         </q-btn-group>
 
         <!-- Mobile Navigation - icons only -->
@@ -76,8 +90,15 @@
             size="sm"
             class="mobile-nav-btn"
           />
-
-          <q-btn flat :to="{ name: 'test' }" icon="yard" size="sm" class="mobile-nav-btn" />
+          <q-btn
+            flat
+            round
+            :to="{ name: 'TypesPage' }"
+            icon="category"
+            size="sm"
+            class="mobile-nav-btn"
+          />
+          <!-- <q-btn flat :to="{ name: 'test' }" icon="yard" size="sm" class="mobile-nav-btn" /> -->
         </div>
       </q-toolbar>
     </q-header>

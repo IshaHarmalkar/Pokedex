@@ -26,10 +26,6 @@ import { useNavigationStore } from 'src/stores/navigation-store'
 import TestCard from 'components/TestCard.vue'
 
 export default {
-  setup() {
-    const navigateStore = useNavigationStore()
-    return { navigateStore }
-  },
   name: 'PokemonDetailsPage',
 
   components: {
@@ -41,6 +37,7 @@ export default {
       pokemon: null,
       loading: true,
       error: null,
+      navigateStore: useNavigationStore(),
     }
   },
   async mounted() {
@@ -69,10 +66,14 @@ export default {
     },
 
     handleBack() {
-      if (this.navigateStore.mode === 'search') {
-        this.$router.push({ name: 'pokedex', query: { q: this.navigateStore.searchQuery } })
+      const store = this.navigateStore
+
+      if (store.mode === 'search') {
+        this.$router.push({ name: 'pokedex', query: { q: store.searchQuery } })
+      } else if (store.mode === 'type') {
+        this.$router.push({ name: 'TypePage', params: { type: store.typeName } })
       } else {
-        const page = this.navigateStore.PageNo || 1
+        const page = store.PageNo || 1
         this.$router.push({ name: 'pokedex', query: { page } })
       }
     },

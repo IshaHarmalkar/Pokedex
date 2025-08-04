@@ -3,9 +3,10 @@ import { defineStore } from 'pinia'
 export const useNavigationStore = defineStore('navigate', {
   state: () => ({
     PageNo: 1, //initially it's 1
-    mode: 'pokedex', //it can be pokedex or search
+    mode: 'pokedex', //it can be pokedex or search or type.
     lastPageBeforeSearch: 1,
     searchQuery: '',
+    typeName: '',
   }),
 
   actions: {
@@ -33,6 +34,18 @@ export const useNavigationStore = defineStore('navigate', {
       this.mode = 'pokedex'
       this.PageNo = this.lastPageBeforeSearch
       this.searchQuery = ''
+    },
+
+    enterTypeMode(type) {
+      this.mode = 'type'
+      this.typeName = type
+    },
+
+    exitTypeMode() {
+      if (this.mode === 'type') {
+        this.mode = 'pokedex'
+        this.typeName = ''
+      }
     },
 
     reset() {

@@ -8,7 +8,7 @@
     >
       <!-- Image Section -->
       <q-card-section
-        class="hero-section"
+        class="hero-section relative-position"
         :style="{ background: `linear-gradient(135deg, ${primaryTypeColor} 0%), #a8e060 100%` }"
       >
         <div class="text-h4 row goldman-bold text-white">
@@ -28,7 +28,6 @@
               fontWeight: '600',
               boxShadow: `0 0 6px ${type.color}66`,
             }"
-            @click="onClick"
             >{{ type.name }}</q-chip
           >
           <div class="flex-left">
@@ -173,6 +172,66 @@
           </div>
         </div>
       </q-card-section>
+
+      <q-card-section class="q-ma-none q-pa-none evolution-section">
+        <!-- Evolution Button -->
+        <div class="evolution" v-if="hasEvolution">
+          <q-card-actions>
+            <q-btn flat label="Evolution" color="grey" @click="expanded = !expanded" />
+            <q-space />
+            <q-btn
+              color="grey"
+              round
+              flat
+              dense
+              :icon="expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+              @click="expanded = !expanded"
+            />
+          </q-card-actions>
+
+          <q-slide-transition class="">
+            <div v-show="expanded">
+              <q-separator />
+              <q-card-section>
+                <!-- <div class="text-h6 text-center q-mb-md">{{ evolutionChain.chain_name }}</div> -->
+
+                <div
+                  class="evolution-container"
+                  :style="{
+                    background: `linear-gradient(135deg, ${primaryTypeColor}ee, ${primaryTypeColor}bb)`,
+                  }"
+                >
+                  <div class="row justify-center items-center q-gutter-sm">
+                    <div
+                      v-for="(evolution, index) in evolutionChain.evolution_chain"
+                      :key="evolution.name"
+                      class="evolution-item"
+                    >
+                      <!-- Evolution Stage -->
+                      <div class="text-center">
+                        <div class="evolution-name text-h6 text-capitalize text-white">
+                          {{ evolution.name }}
+                        </div>
+                        <div class="evolution-order text-caption text-white">
+                          Stage {{ evolution.order }}
+                        </div>
+                      </div>
+
+                      <!-- Arrow between evolutions (except for last item) -->
+                      <q-icon
+                        v-if="index < evolutionChain.evolution_chain.length - 1"
+                        name="arrow_forward"
+                        class="evolution-arrow text-white"
+                        size="md"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </q-card-section>
+            </div>
+          </q-slide-transition>
+        </div>
+      </q-card-section>
     </q-card>
   </div>
 </template>
@@ -193,6 +252,10 @@ export default {
       loading: false,
       error: null,
       value: 34,
+      evolutionChain: [],
+      activeTab: 'stats',
+      expanded: false,
+      showEvolutionDialog: false,
 
       //Pokemon Type colors
       typeColors: {
@@ -227,6 +290,22 @@ export default {
         })) || []
       )
     },
+    // hasEvolution() {
+    //   return (
+    //     Array.isArray(this.evolutionChain.evolution_chain) &&
+    //     this.evolutionChain.evolution_chain.length > 1
+    //   )
+    // },
+
+    hasEvolution() {
+      return (
+        this.evolutionChain &&
+        this.evolutionChain.evolution_chain &&
+        Array.isArray(this.evolutionChain.evolution_chain) &&
+        this.evolutionChain.evolution_chain.length > 0 &&
+        !this.evolutionChain.message
+      )
+    },
 
     primaryTypeColor() {
       return this.typedColors[0]?.color || '#ccc'
@@ -239,6 +318,33 @@ export default {
 
       const gradientStops = colors.map((c, i) => `${c} ${(i / (colors.length - 1)) * 100}%`)
       return `linear-gradient(135deg, ${gradientStops.join(', ')})`
+    },
+  },
+
+  mounted() {
+    this.fetchEvolutionChain()
+  },
+
+  methods: {
+    async fetchEvolutionChain() {
+      this.loading = true
+      try {
+        console.log('Inside evolution function')
+        const res = await this.$api.get(`/pokemon/evolution/${this.pokemon.name.toLowerCase()}`)
+        this.evolutionChain = res.data || []
+
+        //  console.log(this.evolutionChain)
+      } catch (err) {
+        console.error('Error fetching evolution chain', err)
+        this.error = 'Failed to load evolution data'
+        this.evolutionChain = [] // Ensure it's always an array
+      } finally {
+        this.loading = false
+      }
+    },
+    onClick(type) {
+      // Handle type chip click - maybe emit event or navigate
+      this.$emit('type-clicked', type)
     },
   },
 }
@@ -279,5 +385,37 @@ export default {
 .border-lr {
   border-left: 1px solid black;
   border-right: 1px solid black;
+}
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
+}
+
+//evoltuion
+.evolution-container {
+  border-radius: 8px;
+  padding: 16px;
+  // margin-top: 8px;
+}
+
+.evolution-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.evolution-name {
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.evolution-order {
+  opacity: 0.9;
+}
+
+.evolution-arrow {
+  margin: 0 8px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 </style>
