@@ -8,12 +8,16 @@ This is the backend of the Pokédex app, built with **Laravel**. It powers the f
 
 ### ✅ RESTful Endpoints
 
+### ✅ RESTful Endpoints
+
 -   `/api/pokemon/{identifier}`: Get details of a specific Pokémon by name or ID.
 -   `/api/pokemon/type/{type}`: Fetch Pokémon filtered by type (supports infinite scroll with `limit` and `last_id`).
--   `/api/pokemon/search?q=`: Search Pokémon by name.
+-   `/api/pokemon/search?q=`: Search Pokémon by name, id, incomplete names.
 -   `/api/pokemon/evolution/{identifier}`: Get the evolution chain of a given Pokémon.
 -   `/api/pokemon/random`: Returns a random Pokémon.
--   `/api/types`: Lists all Pokémon types.
+-   `/api/types`: returns all Pokémons of required type.
+-   `/api/pokemon`: Get a list of all Pokémon, paginted, optional limit parameter. defaults to 20 pokemons at a time.
+-   `/api/pokemon/compare?first=<name_or_id>&second=<name_or_id>`: Compare two Pokémon side by side.
 
 ### 🧬 Evolution System
 
