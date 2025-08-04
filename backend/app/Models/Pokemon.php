@@ -46,4 +46,21 @@ class Pokemon extends Model
     {
         return array_sum($this->stats);
     }
+
+    public function evolutionLink()
+    {
+        return $this->hasOne(EvolutionChainPokemon::class, 'pokemon_id');
+    }
+
+    public function evolutionChain()
+    {
+        return $this->hasOneThrough(
+            EvolutionChain::class,          // Final model
+            EvolutionChainPokemon::class,   // Intermediate model
+            'pokemon_id',                   // FK on EvolutionChainPokemon that points to Pokemon
+            'id',                           // FK on EvolutionChain that EvolutionChainPokemon uses
+            'id',                           // Local key on Pokemon (id)
+            'evolution_chain_id'            // FK on EvolutionChainPokemon that points to EvolutionChain
+        );
+    }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EvolutionController;
 use App\Http\Controllers\PokemonController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,3 +22,5 @@ Route::get('/pokemon/compare', [PokemonController::class, 'compare']);
 Route::get('/pokemon/{identifier}', [PokemonController::class, 'show']);
 
 Route::get('/pokemon/type/{type}', [PokemonController::class, 'byType']);
+
+Route::get('/pokemon/evolution/{nameOrId}', [EvolutionController::class, 'getEvolutionChain']);

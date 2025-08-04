@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pokemon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PokemonController extends Controller
 {
@@ -53,10 +54,10 @@ class PokemonController extends Controller
     public function random()
     {
         $count = Pokemon::count();
-        \Log::info('Pokemon count: '.$count);
+        Log::info('Pokemon count: '.$count);
 
         $pokemon = Pokemon::inRandomOrder()->first();
-        \Log::info('Pokemon found: '.($pokemon ? 'YES' : 'NO'));
+        Log::info('Pokemon found: '.($pokemon ? 'YES' : 'NO'));
 
         if (! $pokemon) {
             return response()->json([

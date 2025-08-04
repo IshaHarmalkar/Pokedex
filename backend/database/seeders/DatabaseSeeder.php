@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             \Database\Seeders\PokemonSeeder::class,
+            \Database\Seeders\EvolutionChainSeeder::class,
         ]);
 
     }
