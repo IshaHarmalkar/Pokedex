@@ -50,6 +50,39 @@ A full-stack Pokédex web app built with **Laravel**, **Vue.js**, and **Quasar**
 
 ---
 
+## 📸 Screenshots
+
+### Home Page
+
+![Home](ScreenShots/Home.png)
+
+### Random Pokémon
+
+![Random](ScreenShots/RandomPokemon.png)
+
+### Search Results
+
+![Search](ScreenShots/Search_Pokemon.png)
+
+### Compare Pokémon
+
+![Compare](ScreenShots/ComparePokemon.png)
+
+### Types Overview
+
+![Types](ScreenShots/Types.png)
+
+### Pokémon of a Specific Type (with Infinite Scroll)
+
+![Type Pokémon](ScreenShots/TypePokemon.png)
+![Infinite Scroll](ScreenShots/Infinite_scroll_for_type.png)
+
+### Pokémon Without Evolution
+
+![No Evolution](ScreenShots/Pokemon_No_Evolution.png)
+
+---
+
 ### 🤓 Want to Clone This Project?
 
 #### Requirements
